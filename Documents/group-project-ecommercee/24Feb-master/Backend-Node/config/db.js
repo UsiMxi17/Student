@@ -1,13 +1,11 @@
-const mysql = require('mysql2');
-
+import mysql from 'mysql2/promise'; // /promise allows you to use async and await functions
+import { config } from 'dotenv';
+config()
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'rubberbandGang021',
-    database: 'ecommerce_db',
-    waitForConnections: true,
-    connectionLimit: 10, // Number of connections in the pool
-    queueLimit: 0
-});
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
+})
 
-module.exports = pool.promise(); // Export the pool with promise support
+export {pool}

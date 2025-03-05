@@ -74,11 +74,13 @@
 <script>
 import Datepicker from 'vue3-datepicker';
 import VideoPopup from "@/components/VideoPopup.vue";
+import BookingForm from '@/components/BookingForm.vue';
 
 export default {
   components: {
     Datepicker,
     VideoPopup,
+    BookingForm
   },
   data() {
     return {
@@ -88,7 +90,8 @@ export default {
       form: {
         name: '',
         email: '',
-        time: '',
+        booking_date:'',
+        booking_time: '',
         stylist: '',
         comments: ''
       }
@@ -110,23 +113,42 @@ export default {
     goToPage() {
       this.$router.push('/customroutezainu');
     },
-    handleSubmit() {
+    async handleSubmit() {
       this.showModal = true;
       this.form = {
         name: '',
         email: '',
-        time: '',
+        booking_date:'',
+        booking_time: '',
         stylist: '',
         comments: ''
       };
       this.selectedDate = null;
+      try {
+        const response = await fetch("http://localhost:5000/api/book-stylist", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(this.form)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            this.message = result.message;
+            this.form = { name: "", email: "", booking_date: "", booking_time: "", stylist: "", comments: "" };
+        } else {
+            alert("Error: " + result.message);
+        }
+        } catch (error) {
+        console.error("Booking error:", error);
+        }
     },
     closeModal() {
       this.showModal = false;
       this.form = {
         name: '',
         email: '',
-        time: '',
+        booking_date:'',
+        booking_time: '',
         stylist: '',
         comments: ''
       };

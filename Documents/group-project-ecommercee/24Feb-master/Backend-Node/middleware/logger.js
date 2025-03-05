@@ -3,4 +3,4 @@ const logger = (req, res, next) => {
     next(); // Continue to the next middleware or route
 };
 
-module.exports = logger;
+export default logger;

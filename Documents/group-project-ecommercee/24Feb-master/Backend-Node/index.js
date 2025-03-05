@@ -1,27 +1,30 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const { logger, errorHandler } = require("./middleware"); // Import middleware
+import express from 'express'
+import cors from 'cors'
+import bodyParser from "body-parser"
+import errorHandler from "./middleware/errorHandler.js";
+import logger from "./middleware/logger.js";
+// import authenticateJWT from '../Backend-Node/middleware/authMiddleware.js'
+// import userRoute from './routes/userRoute.js';
+// import paymentRoute from './routes/paymentRoute.js';
+import bookingsRoutes from "./routes/bookingsRoute.js";
+import contactRoutes from "./routes/contactRoute.js"
 
-const bookingsRoutes = require("./routes/bookings");
-const contactRoutes = require("./routes/Contact.js");
+const PORT = process.env.PORT || 5000
+const app = express()
+app.use(cors({
+    origin:'http://localhost:8080'
+}))
+app.use(express.json())
+// path , imported file
+app.use("/bookings", bookingsRoutes) 
+app.use("/contacts", contactRoutes)
+// app.use("/routes/userRoute.js", userRoute);
+// app.use("/routes/paymentRoute.js", paymentRoute);
 
-const app = express();
+// app.get('/protected', authenticateJWT, (req, res) => {
+    // res.json({ message: 'This is a protected route', user: req.user });
+// });
 
-// Middleware
-app.use(cors({ origin: "http://localhost:8080", credentials: true }));
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(logger); // Logs all requests
-
-// Routes
-app.use('/api', bookingsRoutes);
-app.use('/api', contactRoutes);
-
-// Global Error Handling Middleware (always at the end)
-app.use(errorHandler);
-
-// Start Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT,()=>{
+console.log('http://localhost:'+ PORT);
+})

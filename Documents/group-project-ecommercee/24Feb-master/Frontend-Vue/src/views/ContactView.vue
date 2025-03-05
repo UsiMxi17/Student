@@ -72,16 +72,16 @@
         this.email = "";
         this.message = "";
       } else {
-        alert("Failed to send message. Please try again later.");
+        alert(result.message);
       }
     } catch (error) {
       console.error("Error sending message:", error);
-      alert("Error connecting to the server. Please check your internet connection.");
+      alert("Could not connect to the server.");
     }
   }
-}
+  }
+  }
 
-  };
   </script>
   
   <style scoped>

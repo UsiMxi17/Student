@@ -1,27 +1,28 @@
-const pool = require('../config/db');
+import {getBookings, getBookingId, insertBooking} from  '../models/bookingsModel.js'
 
-// Create a booking
-exports.createBooking = async (req, res) => {
-    try {
-        const { name, email, booking_date, booking_time, stylist, comments } = req.body;
-        const sql = `INSERT INTO bookings (name, email, booking_date, booking_time, stylist, comments) VALUES (?, ?, ?, ?, ?, ?)`;
-        const values = [name, email, booking_date, booking_time, stylist, comments];
+const getBookingsCon = async(req,res)=>{
+    res.json({employees:await getBookings()})
+}
 
-        const [result] = await pool.execute(sql, values);
-        res.status(201).json({ message: 'Booking confirmed', bookingId: result.insertId });
-    } catch (err) {
-        console.error('Error inserting booking:', err);
-        res.status(500).json({ message: 'Failed to book stylist' });
-    }
-};
+const getBookingIdCon = async(req,res)=>{
+    res.json({employees:await getBookingId(req.params.id)})
+}
 
-// Get all bookings
-exports.getBookings = async (req, res) => {
-    try {
-        const [results] = await pool.execute('SELECT * FROM bookings');
-        res.json(results);
-    } catch (err) {
-        console.error('Error fetching bookings:', err);
-        res.status(500).json({ message: 'Failed to fetch bookings' });
-    }
-};
+const insertBookingCon = async (req,res)=>{
+    let {name, email, booking_date, booking_time, stylist, comments, created_at} = req.body
+    res.json({employees:await insertBooking(name, email, booking_date, booking_time, stylist, comments, created_at)})
+}
+
+// const updateBookingCon = async (req,res)=>{
+    // console.log(req.params);
+
+    // let {id}=req.params
+    // let {name, email, booking_date, booking_time, stylist, comments, created_at} = req.body
+    // res.json({employees:await updateBooking(name, email, booking_date, booking_time, stylist, comments, created_at, id)})
+// }
+
+// const deleteBookingCon = async(req,res)=>{
+    // res.json({employees:await deleteBooking(req.params.id)})
+// }
+
+export {getBookingsCon, getBookingIdCon, insertBookingCon} // deleteBookingCon, updateBookingCon}

@@ -1,4 +1,4 @@
-const express = require("express");
+import express from "express";
 const crypto = require("crypto");
 require("dotenv").config();
 
@@ -42,4 +42,4 @@ try {
 }
 });
 
-module.exports = router;
+export default router;

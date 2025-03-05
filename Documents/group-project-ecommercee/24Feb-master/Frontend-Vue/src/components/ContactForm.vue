@@ -30,27 +30,29 @@ export default {
     };
     },
     methods: {
-    async submitMessage() {
-        try {
-        const response = await fetch("http://localhost:5000/api/contact", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(this.contact)
-        });
+async submitMessage() {
+    try {
+    const response = await fetch("http://localhost:5000/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(this.contact),
+    });
 
-        const result = await response.json();
-        if (response.ok) {
-            this.message = result.message;
-            this.contact = { name: "", email: "", message: "" };
-        } else {
-            alert("Error: " + result.message);
-        }
-        } catch (error) {
-        console.error("Message submission error:", error);
-        }
+    const result = await response.json();
+
+    if (result.success) {
+        this.message = result.message;
+        this.contact = { name: "", email: "", message: "" };
+    } else {
+        alert(result.message);
     }
+    } catch (error) {
+    console.error("Message submission error:", error);
+    alert("Could not submit your message.");
     }
-};
+}
+}
+}
 </script>
 
 <style>
