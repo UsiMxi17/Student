@@ -8,6 +8,7 @@ import logger from "./middleware/logger.js";
 // import paymentRoute from './routes/paymentRoute.js';
 import bookingsRoutes from "./routes/bookingsRoute.js";
 import contactRoutes from "./routes/contactRoute.js"
+import loyaltyRoutes from "./routes/loyaltyRoutes.js";
 
 const PORT = process.env.PORT || 5000
 const app = express()
@@ -18,6 +19,7 @@ app.use(express.json())
 // path , imported file
 app.use("/bookings", bookingsRoutes) 
 app.use("/contacts", contactRoutes)
+app.use("/loyalty", loyaltyRoutes);
 // app.use("/routes/userRoute.js", userRoute);
 // app.use("/routes/paymentRoute.js", paymentRoute);
 

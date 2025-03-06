@@ -28,10 +28,10 @@
           <div class="form-group">
             <label for="date">Select Date:</label>
             <Datepicker v-model="selectedDate" class="date-picker modern-input" required />
-          </div>
-          <div class="form-group">
+            </div>
+            <div class="form-group">
             <label for="time">Select Time:</label>
-            <input type="time" id="time" name="time" required v-model="form.time" class="modern-input">
+            <input type="time" id="time" name="time" required v-model="form.booking_time" class="modern-input">
           </div>
           <div class="form-group">
             <label for="stylist">Choose Stylist:</label>
@@ -61,12 +61,12 @@
 
       <!-- Confirmation Modal -->
       <div v-if="showModal" class="modal">
-        <div class="modal-content">
-          <h2>Booking Confirmed!</h2>
-          <p>Your booking has been successfully submitted.</p>
-          <button @click="closeModal" class="modern-button">Exit</button>
-        </div>
+      <div class="modal-content">
+      <h2>Booking Confirmed!</h2>
+        <p>Your booking has been successfully submitted.</p>
+        <button @click="closeModal()" class="modern-button">Exit</button>
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -114,47 +114,37 @@ export default {
       this.$router.push('/customroutezainu');
     },
     async handleSubmit() {
-      this.showModal = true;
-      this.form = {
-        name: '',
-        email: '',
-        booking_date:'',
-        booking_time: '',
-        stylist: '',
-        comments: ''
-      };
-      this.selectedDate = null;
-      try {
-        const response = await fetch("http://localhost:5000/api/book-stylist", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(this.form)
-        });
+  this.showModal = true;
+  // Ensure selectedDate is correctly assigned
+  this.form.booking_date = this.selectedDate
+    ? new Date(this.selectedDate).toISOString().split("T")[0] // Format YYYY-MM-DD
+    : "";
 
-        const result = await response.json();
-        if (response.ok) {
-            this.message = result.message;
-            this.form = { name: "", email: "", booking_date: "", booking_time: "", stylist: "", comments: "" };
-        } else {
-            alert("Error: " + result.message);
-        }
-        } catch (error) {
-        console.error("Booking error:", error);
-        }
-    },
-    closeModal() {
-      this.showModal = false;
-      this.form = {
-        name: '',
-        email: '',
-        booking_date:'',
-        booking_time: '',
-        stylist: '',
-        comments: ''
-      };
+  try {
+    const response = await fetch("http://localhost:5000/bookings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(this.form),
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      this.message = result.message;
+      
+      // Clear form after successful submission
+      this.form = { name: "", email: "", booking_date: "", booking_time: "", stylist: "", comments: "" };
+      this.selectedDate = null;
+    } else {
+      alert("Error: " + result.message);
     }
+  } catch (error) {
+    console.error("Booking error:", error);
   }
-};
+  },
+  closeModal() {
+    this.showModal = false;
+  }
+}}
 </script>
 
 <style scoped>

@@ -15,6 +15,11 @@
         <button @click="checkout">Checkout</button>
       </div>
     </div>
+    <div>
+    <h2>My Loyalty Points</h2>
+    <p>You have {{ points }} points</p>
+    <button @click="redeemPoints">Redeem Points</button>
+  </div>
   </template>
   
   <script setup>
